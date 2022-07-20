@@ -23,6 +23,7 @@ const registerMaterial = async(materialDetails)=>{
 
 const importExportMaterial = async(materialDetails, type, employee)=>{
 
+
     try {
         const infoMaterial = await Material.findOne({mid: materialDetails.mid});
 
@@ -41,14 +42,13 @@ const importExportMaterial = async(materialDetails, type, employee)=>{
 
         switch(type){
             case 'min':
-
                 if(!alredyRegistedInStock){
                     stock = new Stock({
                         ...{
                             mid : infoMaterial.mid,
                             name: infoMaterial.name,
-                            quantity: materialDetails.quantity,
-                            unityPrice: infoMaterial.price,
+                            quantity: parseInt(materialDetails.quantity),
+                            unityPrice: parseInt(pinfoMaterial.price),
                             uid: employee.uid,
                             owner: employee.owner
                         }
@@ -56,10 +56,10 @@ const importExportMaterial = async(materialDetails, type, employee)=>{
 
                     return await stock.save();
                 }
-                
+
                 stock = await Stock.findOne({mid: infoMaterial.mid})
-                stock.quantity = stock.quantity + materialDetails.quantity;
-                
+                stock.quantity = stock.quantity + parseInt(materialDetails.quantity);
+
                 return await stock.save();
 
             case 'mout':
@@ -70,9 +70,9 @@ const importExportMaterial = async(materialDetails, type, employee)=>{
 
                 stock = await Stock.findOne({mid: infoMaterial.mid});
                 stock.quantity = stock.quantity - materialDetails.quantity;
-                
+
                 return await stock.save();
-            default: 
+            default:
                 return;
         }
     } catch (error) {

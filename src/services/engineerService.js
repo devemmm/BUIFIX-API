@@ -92,7 +92,7 @@ const payWageEmployee = async(employees, engineer)=>{
 
 const getWageEmployees = async(employee)=>{
     try {
-        const wageEmployee = await Wage_Employee.find({owner: employee.owner});
+        const wageEmployee = await Wage_Employee.find({owner: employee.owner, active: true});
         return wageEmployee;
     } catch (error) {
         throw new Error(error,message);

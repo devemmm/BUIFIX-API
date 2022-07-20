@@ -6,6 +6,11 @@ const wageEmployeeSchema = mongoose.Schema({
         trim: true,
         required: true,
     },
+    names:{
+        type: String,
+        trim: true,
+        required: true
+    },
     phone:{
         type: String,
         trim: true,
