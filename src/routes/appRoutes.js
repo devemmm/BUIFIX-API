@@ -36,7 +36,7 @@ router.post('/admin/register/employee/:type', requireAuth, async (req, res) => {
 router.get('/admin/actities', requireAuth, async (req, res) => {
     try {
 
-        if (req.user.userType !== 0 || req.user.userType !== 0) {
+        if (req.user.userType !== 0 && req.user.userType !== 0) {
             throw new Error("you are not allowed to perform this action");
         }
 
@@ -52,7 +52,7 @@ router.get('/admin/actities', requireAuth, async (req, res) => {
 router.post('/users/register/activity', requireAuth, async (req, res) => {
     try {
 
-        if (req.user.userType !== 1 || req.user.userType !== 0) {
+        if (req.user.userType !== 1 && req.user.userType !== 0) {
             throw new Error("You are not allowed to set new Activity");
         }
 
@@ -67,11 +67,11 @@ router.post('/users/register/activity', requireAuth, async (req, res) => {
 router.post('/users/register/wage_employee', requireAuth, async (req, res) => {
     try {
 
-        if (req.user.userType !== 1 || req.user.userType !== 0) {
+        if (req.user.userType !== 1 && req.user.userType !== 0) {
             throw new Error("you are not allowed to register waged employee");
         };
 
-        const employee = await registerWageEmployee(req.body, req.employee);
+        const employee = await registerWageEmployee(req.body, req);
 
         res.status(201).json({ status: 201, message: 'successfull', employee });
     } catch (error) {
@@ -93,7 +93,7 @@ router.delete('/users/wage_employee/:nid', requireAuth, async (req, res) => {
 router.post('/users/pay/wage_employee', requireAuth, async (req, res) => {
     try {
 
-        if (req.user.userType !== 1 || req.user.userType !== 0) {
+        if (req.user.userType !== 1 && req.user.userType !== 0) {
             throw new Error("you are not allowed to perfom this action");
         }
 
@@ -108,11 +108,11 @@ router.post('/users/pay/wage_employee', requireAuth, async (req, res) => {
 router.get('/users/wage/employees', requireAuth, async (req, res) => {
     try {
 
-        if (req.user.userType !== 1 || req.user.userType !== 0) {
+        if (req.user.userType !== 1 && req.user.userType !== 0) {
             throw new Error("you are not allowed to perform this action");
         }
 
-        const employees = await getWageEmployees(req.employee);
+        const employees = await getWageEmployees(req);
         res.status(200).json({ status: 200, message: 'successfull', numberOfEmployees: employees.length, employees })
     } catch (error) {
         res.status(400).json({ status: 400, message: 'failed', error: error.message });
@@ -121,12 +121,11 @@ router.get('/users/wage/employees', requireAuth, async (req, res) => {
 
 router.get('/users/actities', requireAuth, async (req, res) => {
     try {
-
-        if (req.user.userType !== 1 || req.user.userType !== 0) {
+        if (req.user.userType !== 1 && req.user.userType !== 0) {
             throw new Error("you are not allowed to perform this action");
         }
 
-        const actities = await getActivities(req.employee);
+        const actities = await getActivities(req);
         res.status(200).json({ status: 200, message: 'successfull', actities })
     } catch (error) {
         res.status(400).json({ status: 400, message: 'failed', error: error.message });
@@ -141,11 +140,11 @@ router.patch('/users/employees/actities/:id', requireAuth, async (req, res) => {
 
         let expenses = parseInt(req.query.expenses);
 
-        if (req.user.userType !== 1 || req.user.userType !== 0) {
+        if (req.user.userType !== 1 && req.user.userType !== 0) {
             throw new Error("you are not allowed to perform this action");
         }
 
-        const actities = await updateActivityProgress(req.employee, req.params.id, expenses);
+        const actities = await updateActivityProgress(req, req.params.id, expenses);
         res.status(200).json({ status: 200, message: 'successfull', actities })
     } catch (error) {
         res.status(400).json({ status: 400, message: 'failed', error: error.message });
@@ -154,11 +153,10 @@ router.patch('/users/employees/actities/:id', requireAuth, async (req, res) => {
 // -----------------------------Stock------------------------------------
 router.get('/users/stock', requireAuth, async (req, res) => {
     try {
-        if (req.user.userType !== 2 || req.user.userType !== 0) {
+        if (req.user.userType !== 2 && req.user.userType !== 0) {
             throw new Error("you are not allowed to manage this stock");
         }
-
-        const stock = await Stock.find({ owner: req.employee.owner })
+        const stock = await Stock.find({ owner: req.employee?.owner ? req.employee.owner : req.user._id })
         res.status(200).json({ status: 200, message: 'successfull', stock });
     } catch (error) {
         res.status(400).json({ status: 400, message: 'failed', error: error.message });
@@ -169,7 +167,7 @@ router.post('/users/register/materials', requireAuth, async (req, res) => {
     try {
 
         const user = req.user;
-        if (user.userType !== 2 || req.user.userType !== 0) {
+        if (user.userType !== 2 && req.user.userType !== 0) {
             throw new Error("you are not allowed to register materials");
         }
 
@@ -184,7 +182,7 @@ router.post('/users/register/materials', requireAuth, async (req, res) => {
 router.patch('/users/register/materials/:type', requireAuth, async (req, res) => {
 
     try {
-        if (req.user.userType !== 2 || req.user.userType !== 0) {
+        if (req.user.userType !== 2 && req.user.userType !== 0) {
             throw new Error("you are not allowed to manage this stock");
         }
         const { min, mout } = req.params;
