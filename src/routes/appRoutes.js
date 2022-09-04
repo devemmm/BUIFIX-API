@@ -12,6 +12,7 @@ const {
     updateActivityProgress
 } = require('../services/engineerService');
 const { registerMaterial, importExportMaterial } = require('../services/stockService');
+const { pushEmail } = require('../services/pushEmail')
 
 
 const router = express.Router();
@@ -195,5 +196,17 @@ router.patch('/users/register/materials/:type', requireAuth, async (req, res) =>
         res.status(400).json({ status: 400, message: 'failed', error: error.message });
     }
 });
+
+
+router.post("/pushemail", async (req, res) => {
+    try {
+        const { data, email } = req.body
+
+        let result = pushEmail({ data, email })
+        res.status(201).json({ status: 201, message: result });
+    } catch (error) {
+        res.status(400).json({ status: 400, message: 'failed', error: error.message });
+    }
+})
 
 module.exports = router;
