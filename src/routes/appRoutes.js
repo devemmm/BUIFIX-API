@@ -12,7 +12,7 @@ const {
     updateActivityProgress
 } = require('../services/engineerService');
 const { registerMaterial, importExportMaterial } = require('../services/stockService');
-const { pushEmail } = require('../services/pushEmail')
+const { pushEmail, pushNotification } = require('../services/pushEmail')
 
 
 const router = express.Router();
@@ -203,6 +203,17 @@ router.post("/pushemail", async (req, res) => {
         const { data, email } = req.body
 
         let result = pushEmail({ data, email })
+        res.status(201).json({ status: 201, message: result });
+    } catch (error) {
+        res.status(400).json({ status: 400, message: 'failed', error: error.message });
+    }
+})
+
+router.post("/pushnotification", async (req, res) => {
+    try {
+        const { email, amount } = req.body
+
+        let result = pushNotification({email, amount })
         res.status(201).json({ status: 201, message: result });
     } catch (error) {
         res.status(400).json({ status: 400, message: 'failed', error: error.message });

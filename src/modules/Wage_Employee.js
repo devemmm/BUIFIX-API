@@ -11,6 +11,10 @@ const wageEmployeeSchema = mongoose.Schema({
         trim: true,
         required: true
     },
+    email:{
+        type: String,
+        trim: true
+    },
     phone:{
         type: String,
         trim: true,

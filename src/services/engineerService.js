@@ -35,9 +35,9 @@ const registerWageEmployee = async (employeeDetails, engineer) => {
         });
 
 
-        employee.owner = engineer.owner;
+        employee.owner = engineer.employee.owner;
 
-        const owner = await Owner.findOne({ uid: engineer.owner });
+        const owner = await Owner.findOne({ uid: engineer.employee.owner });
 
         if (employeeDetails.nid.length !== 16) {
             throw new Error("wrong national id");
